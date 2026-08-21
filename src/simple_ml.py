@@ -20,7 +20,7 @@ def add(x, y):
         Sum of x + y
     """
     ### BEGIN YOUR CODE
-    pass
+    return x + y
     ### END YOUR CODE
 
 
@@ -36,8 +36,8 @@ def parse_mnist(image_filename, label_filename):
         Tuple (X,y):
             X (numpy.ndarray[np.float32]): 2D numpy array containing the loaded 
                 data.  The dimensionality of the data should be 
-                (num_examples x input_dim) where 'input_dim' is the full 
-                dimension of the data, e.g., since MNIST images are 28x28, it 
+                (num_examples * input_dim) where 'input_dim' is the full 
+                dimension of the data, e.g., since MNIST images are 28*28, it 
                 will be 784.  Values should be of type np.float32, and the data 
                 should be normalized to have a minimum value of 0.0 and a 
                 maximum value of 1.0 (i.e., scale original values of 0 to 0.0 
@@ -48,7 +48,16 @@ def parse_mnist(image_filename, label_filename):
                 for MNIST will contain the values 0-9.
     """
     ### BEGIN YOUR CODE
-    pass
+    with gzip.open(label_filename) as label_path:
+        magic, n = struct.unpack('>II', label_path.read(8))
+        y = np.frombuffer(label_path.read(), dtype=np.uint8)
+        
+    with gzip.open(image_filename) as image_path:
+        magic, num, rows, cols = struct.unpack('>IIII', image_path.read(16))
+        X = np.frombuffer(image_path.read(), dtype=np.uint8).reshape(len(y), -1)
+        X = X.astype(np.float32) / 255.0
+        
+    return X, y
     ### END YOUR CODE
 
 
