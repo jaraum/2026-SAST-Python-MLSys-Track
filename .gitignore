@@ -1,0 +1,6 @@
+.venv
+.vscode
+tests/__pycache__/
+src/__pycache__/
+.pytest_cache/
+simple_ml_ext.so
